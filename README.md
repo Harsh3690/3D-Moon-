@@ -3,7 +3,7 @@
 An interactive 3D Moon in the browser, built on real NASA lunar data.
 
 - Drag to rotate, scroll or pinch to zoom, click a label to fly to it
-- 42 labelled features: maria, impact basins, craters, mountain ranges, and Apollo, Chandrayaan-3 and Chang'e landing sites
+- 45 labelled features: maria, impact basins, craters, mountain ranges, and Apollo, Chandrayaan-3 and Chang'e landing sites
 - Layer toggles, lat/long grid, sunlight-direction slider, relief exaggeration, near/far side and pole shortcuts
 
 Live site: `https://<your-username>.github.io/<repo-name>/`
