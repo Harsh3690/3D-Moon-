@@ -3,53 +3,7 @@ const COL={mare:'#7fb8ff',crater:'#ffd27f',mount:'#8fe3a0',site:'#ff8c8c',basin:
 const TN={mare:'Maria (lava plains)',crater:'Craters',mount:'Mountain ranges',site:'Landing sites',basin:'Impact basins'};
 const SN={mare:'Mare',crater:'Crater',mount:'Mountain range',site:'Landing site',basin:'Impact basin'};
 // [name,type,lat,lon,priority(1 = shown when zoomed out),description]
-const F=[
-["Mare Imbrium","mare",32.8,-15.6,1,"Sea of Showers. A basalt plain about 1,150 km across, flooding a basin carved by an impact roughly 3.9 billion years ago; lava filled it 3.2–3.8 Gya."],
-["Mare Serenitatis","mare",28,17.5,1,"Sea of Serenity. A ~700 km circular mare ringed by the Caucasus, Haemus and Taurus mountains; it hides a dense mass concentration (mascon)."],
-["Mare Tranquillitatis","mare",8.5,31.4,1,"Sea of Tranquility. Titanium-rich basalts; the Apollo 11 landing site (1969)."],
-["Mare Fecunditatis","mare",-4,52,2,"Sea of Fertility. Luna 16 returned robotic soil samples from its edge in 1970."],
-["Mare Crisium","mare",17,59.1,1,"Sea of Crises. A ~560 km isolated basin that looks oval from Earth because of foreshortening; sampled by Luna 24 in 1976."],
-["Mare Nectaris","mare",-15.2,34.6,2,"Sea of Nectar. A small ~350 km mare in the Nectaris basin, bordered by Theophilus, Cyrillus and Catharina."],
-["Mare Nubium","mare",-21.3,-16.6,2,"Sea of Clouds. Home to the Rupes Recta (Straight Wall), a 110 km fault scarp, and the crater Bullialdus."],
-["Mare Humorum","mare",-24.4,-38.6,2,"Sea of Moisture. A circular ~390 km mare with the large crater Gassendi on its northern rim."],
-["Oceanus Procellarum","mare",18.4,-57.4,1,"Ocean of Storms. The largest mare (~2,500 km), roughly a tenth of the lunar surface, rich in KREEP material. Apollo 12 landed here."],
-["Mare Frigoris","mare",56,1.4,2,"Sea of Cold. A long, narrow mare stretching ~1,600 km along the northern near side."],
-["Mare Vaporum","mare",13.3,3.6,3,"Sea of Vapors. A small mare beside the Apennines, near the Hyginus rille."],
-["Mare Cognitum","mare",-10.5,-23.1,3,"The Sea That Has Become Known. Ranger 7 sent the first close-up US lunar images before impacting here in 1964."],
-["Mare Moscoviense","mare",27.3,147.9,2,"Sea of Moscow. One of very few large maria on the far side, ~277 km across."],
-["Mare Ingenii","mare",-33.7,163.5,3,"Sea of Ingenuity. A far-side mare crossed by bright swirl-like magnetic anomalies."],
-["Mare Orientale","basin",-19.4,-92.8,1,"Eastern Sea. The best-preserved multi-ring impact basin (outer ring ~930 km, Montes Cordillera). Seen only near the western limb."],
-["South Pole–Aitken Basin","basin",-53,-169,1,"The Moon’s largest, deepest and oldest recognised impact basin: ~2,500 km wide and up to ~8 km deep, on the far side. Target of Chang’e-4."],
-["Tycho","crater",-43.3,-11.4,1,"A young (~108 Myr) 85 km crater whose bright rays stretch more than 1,500 km across the near side."],
-["Copernicus","crater",9.6,-20.1,1,"93 km, ~800 Myr old. Terraced walls, central peaks and a bright ray system; a classic complex crater."],
-["Kepler","crater",8.1,-38,2,"A 32 km young crater with bright rays, set in Oceanus Procellarum."],
-["Aristarchus","crater",23.7,-47.4,1,"A 40 km crater, among the brightest features on the Moon; site of reported transient lunar phenomena."],
-["Plato","crater",51.6,-9.3,2,"A 101 km crater with a dark, lava-flooded floor, on the northern edge of Mare Imbrium."],
-["Grimaldi","crater",-5.2,-68.3,2,"A dark-floored walled plain ~170 km wide near the western limb."],
-["Clavius","crater",-58.8,-14.4,1,"One of the largest named craters (~225 km), in the southern highlands, with an arc of smaller craters on its floor."],
-["Langrenus","crater",-8.9,61.1,3,"A 132 km crater with terraced walls and a central peak, near Mare Fecunditatis."],
-["Petavius","crater",-25.1,60.4,3,"A 177 km crater with a central peak complex and a prominent rille across its floor."],
-["Posidonius","crater",31.8,29.9,3,"A 95 km crater on the edge of Mare Serenitatis with a fractured floor."],
-["Archimedes","crater",29.7,-4,3,"An 83 km crater with a smooth, lava-flooded floor in Mare Imbrium."],
-["Eratosthenes","crater",14.5,-11.3,3,"A 58 km crater that gives its name to the Eratosthenian lunar period (~3.2–1.1 Gya)."],
-["Schickard","crater",-44.3,-55.3,3,"A ~227 km walled plain with a partly dark, flooded floor."],
-["Tsiolkovsky","crater",-20.4,129.1,2,"A 180 km far-side crater with a dark mare-flooded floor and a tall central peak."],
-["Montes Apenninus","mount",21,-1,1,"Peaks up to ~5 km, forming the south-eastern rim of the Imbrium basin. Apollo 15 landed at their foot."],
-["Montes Alpes","mount",48,0,2,"Imbrium rim range split by Vallis Alpes, a ~166 km rift valley."],
-["Montes Caucasus","mount",38.4,10,2,"Rugged peaks up to ~6 km high, between Mare Imbrium and Mare Serenitatis."],
-["Montes Carpatus","mount",15.2,-24.4,3,"A range along the southern edge of Mare Imbrium, north of Copernicus."],
-["Montes Jura","mount",47.5,-34,3,"A curving range enclosing Sinus Iridum, the Bay of Rainbows."],
-["Montes Taurus","mount",28,41,3,"Highlands east of Mare Serenitatis; the Apollo 17 valley lies within them."],
-["Apollo 11","site",0.67,23.47,1,"20 July 1969. First humans on the Moon: Neil Armstrong and Buzz Aldrin, in Mare Tranquillitatis."],
-["Apollo 12","site",-3.01,-23.42,3,"November 1969. Pinpoint landing next to the Surveyor 3 probe (Conrad and Bean)."],
-["Apollo 14","site",-3.65,-17.47,3,"February 1971. Fra Mauro highlands (Shepard and Mitchell)."],
-["Apollo 15","site",26.13,3.63,2,"July 1971. First lunar rover, at Hadley Rille beside the Apennines (Scott and Irwin)."],
-["Apollo 16","site",-8.97,15.5,3,"April 1972. Descartes Highlands (Young and Duke)."],
-["Apollo 17","site",20.19,30.77,2,"December 1972. Last crewed landing, in the Taurus–Littrow valley, with geologist Harrison Schmitt."],
-["Chandrayaan-3","site",-69.37,32.32,1,"23 August 2023. India’s Vikram lander and Pragyan rover touched down near the south pole, at Shiv Shakti Point."],
-["Chang’e 4","site",-45.46,177.6,2,"January 2019. First soft landing on the lunar far side, in Von Kármán crater inside the South Pole–Aitken Basin."],
-["Chang’e 5","site",43.06,-51.92,3,"December 2020. Sample-return mission that brought back ~1.7 kg of young basalt."]
-];
+const F = window.LUNAR_FEATURES;
 const P=(la,lo,r=1)=>new THREE.Vector3(r*Math.cos(la*D)*Math.sin(lo*D),r*Math.sin(la*D),r*Math.cos(la*D)*Math.cos(lo*D));
 const fmt=(la,lo)=>Math.abs(la).toFixed(1)+'°'+(la<0?'S':'N')+' '+Math.abs(lo).toFixed(1)+'°'+(lo<0?'W':'E');
 const labs=$('#labs');
