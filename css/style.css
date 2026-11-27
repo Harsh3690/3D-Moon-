@@ -19,6 +19,49 @@ html,body{height:100%;margin:0;background:#04060b;overflow:hidden;font:13px/1.45
 #panel i,#info i{display:inline-block;width:9px;height:9px;border-radius:50%}
 #panel input[type=range],#panel select{width:100%}
 #panel select{margin-top:4px;padding:5px;background:transparent;color:var(--tx);border:1px solid var(--ln);border-radius:6px}
+#panel #featureSearch,
+#panel #featureCategory {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    padding: 7px;
+    background: var(--pn);
+    color: var(--tx);
+    border: 1px solid var(--ln);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 12px;
+}
+
+#featureResults {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-top: 6px;
+}
+
+#featureResults p {
+    color: var(--mu);
+    font-size: 11px;
+    margin: 6px 0;
+}
+
+#featureResults .feature-result {
+    display: block;
+    width: 100%;
+    padding: 6px;
+    margin: 3px 0;
+    text-align: left;
+    color: var(--tx);
+    background: transparent;
+    border: 1px solid var(--ln);
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+#featureResults .feature-result:hover {
+    background: var(--ln);
+}
 .btns{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
 .btns button{padding:6px;border:1px solid var(--ln);background:transparent;color:var(--tx);border-radius:6px;cursor:pointer;font-size:12px}
 .btns button:hover{background:var(--ln)}

@@ -13,6 +13,24 @@
 <canvas id="c"></canvas><div id="labs"></div><div id="hud"></div>
 <details id="panel" open><summary>🌕 Moon Atlas</summary><div class="b">
 <h3>Feature layers</h3><div id="layers"></div>
+<h3>Feature explorer</h3>
+<input
+  type="search"
+  id="featureSearch"
+  placeholder="Search lunar features..."
+  autocomplete="off"
+>
+<select id="featureCategory">
+  <option value="all">All categories</option>
+  <option value="mare">Maria</option>
+  <option value="crater">Craters</option>
+  <option value="mount">Mountain ranges</option>
+  <option value="site">Landing sites</option>
+  <option value="basin">Impact basins</option>
+</select>
+<div id="featureResults">
+  <p>Search or select a category to explore features.</p>
+</div>
 <h3>Display</h3>
 <label><input type="checkbox" id="labOn" checked> Labels</label>
 <label><input type="checkbox" id="grid"> Lat/long grid (30°)</label>

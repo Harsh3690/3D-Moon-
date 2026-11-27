@@ -30,6 +30,49 @@ const grid=new THREE.LineSegments(gg,new THREE.LineBasicMaterial({color:0x66aaff
 const vis={};Object.keys(TN).forEach(t=>{vis[t]=true;const l=document.createElement('label');l.innerHTML='<input type="checkbox" checked><i style="background:'+COL[t]+'"></i>'+TN[t];l.firstChild.onchange=e=>vis[t]=e.target.checked;$('#layers').appendChild(l)});
 const jump=$('#jump');Object.keys(TN).forEach(t=>{const og=document.createElement('optgroup');og.label=TN[t];feats.filter(f=>f.t===t).sort((a,b)=>a.n.localeCompare(b.n)).forEach(f=>{const o=document.createElement('option');o.value=feats.indexOf(f);o.textContent=f.n;og.appendChild(o)});jump.appendChild(og)});
 jump.onchange=()=>{if(jump.value!=='')pick(feats[jump.value])};
+// ---------- FEATURE EXPLORER ----------
+const featureSearch = $('#featureSearch');
+const featureCategory = $('#featureCategory');
+const featureResults = $('#featureResults');
+
+function renderFeatureResults() {
+    const query = featureSearch.value.trim().toLowerCase();
+    const category = featureCategory.value;
+
+    const matches = feats.filter(f => {
+        const matchesQuery =
+            f.n.toLowerCase().includes(query) ||
+            f.desc.toLowerCase().includes(query);
+
+        const matchesCategory =
+            category === 'all' || f.t === category;
+
+        return matchesQuery && matchesCategory;
+    });
+
+    featureResults.replaceChildren();
+
+    if (matches.length === 0) {
+        const message = document.createElement('p');
+        message.textContent = 'No matching lunar features found.';
+        featureResults.appendChild(message);
+        return;
+    }
+
+    matches.forEach(f => {
+        const item = document.createElement('button');
+        item.className = 'feature-result';
+        item.type = 'button';
+        item.textContent = f.n + ' · ' + fmt(f.lat, f.lon);
+        item.addEventListener('click', () => pick(f));
+        featureResults.appendChild(item);
+    });
+}
+
+featureSearch.addEventListener('input', renderFeatureResults);
+featureCategory.addEventListener('change', renderFeatureResults);
+
+renderFeatureResults();
 $('#ex').oninput=e=>setEx(+e.target.value);
 $('#grid').onchange=e=>grid.visible=e.target.checked;
 if(innerWidth<700)$('#panel').open=false;
