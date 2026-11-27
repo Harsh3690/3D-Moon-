@@ -2,12 +2,30 @@ const $=s=>document.querySelector(s),D=Math.PI/180;
 const COL={mare:'#7fb8ff',crater:'#ffd27f',mount:'#8fe3a0',site:'#ff8c8c',basin:'#d3a4ff'};
 const TN={mare:'Maria (lava plains)',crater:'Craters',mount:'Mountain ranges',site:'Landing sites',basin:'Impact basins'};
 const SN={mare:'Mare',crater:'Crater',mount:'Mountain range',site:'Landing site',basin:'Impact basin'};
-// [name,type,lat,lon,priority(1 = shown when zoomed out),description]
+// Feature catalogue is loaded from js/lunar-features.js as structured objects.
 const F = window.LUNAR_FEATURES;
 const P=(la,lo,r=1)=>new THREE.Vector3(r*Math.cos(la*D)*Math.sin(lo*D),r*Math.sin(la*D),r*Math.cos(la*D)*Math.cos(lo*D));
 const fmt=(la,lo)=>Math.abs(la).toFixed(1)+'°'+(la<0?'S':'N')+' '+Math.abs(lo).toFixed(1)+'°'+(lo<0?'W':'E');
 const labs=$('#labs');
-const feats=F.map(([n,t,lat,lon,pr,desc])=>{const el=document.createElement('div');el.className='lab t-'+t;el.textContent=n;el.style.setProperty('--c',COL[t]);const f={n,t,lat,lon,pr,desc,el,p:P(lat,lon)};el.onclick=()=>pick(f);labs.appendChild(el);return f});
+const feats = F.map(data => {
+    const {name, type, lat, lon, priority, description} = data;
+
+    const el = document.createElement('div');
+    el.className = 'lab t-' + type;
+    el.textContent = name;
+    el.style.setProperty('--c', COL[type]);
+
+    const f = {
+        ...data,
+        el,
+        p: P(lat, lon)
+    };
+
+    el.onclick = () => pick(f);
+    labs.appendChild(el);
+
+    return f;
+});
 
 // ---------- three.js scene with real NASA LRO maps ----------
 const cvs=$('#c'),ren=new THREE.WebGLRenderer({canvas:cvs,antialias:true});ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.outputEncoding=THREE.sRGBEncoding;
@@ -28,7 +46,7 @@ const grid=new THREE.LineSegments(gg,new THREE.LineBasicMaterial({color:0x66aaff
 
 // ---------- UI ----------
 const vis={};Object.keys(TN).forEach(t=>{vis[t]=true;const l=document.createElement('label');l.innerHTML='<input type="checkbox" checked><i style="background:'+COL[t]+'"></i>'+TN[t];l.firstChild.onchange=e=>vis[t]=e.target.checked;$('#layers').appendChild(l)});
-const jump=$('#jump');Object.keys(TN).forEach(t=>{const og=document.createElement('optgroup');og.label=TN[t];feats.filter(f=>f.t===t).sort((a,b)=>a.n.localeCompare(b.n)).forEach(f=>{const o=document.createElement('option');o.value=feats.indexOf(f);o.textContent=f.n;og.appendChild(o)});jump.appendChild(og)});
+const jump=$('#jump');Object.keys(TN).forEach(t=>{const og=document.createElement('optgroup');og.label=TN[t];feats.filter(f=>f.type===t).sort((a,b)=>a.name.localeCompare(b.name)).forEach(f=>{const o=document.createElement('option');o.value=feats.indexOf(f);o.textContent=f.name;og.appendChild(o)});jump.appendChild(og)});
 jump.onchange=()=>{if(jump.value!=='')pick(feats[jump.value])};
 // ---------- FEATURE EXPLORER ----------
 const featureSearch = $('#featureSearch');
@@ -41,11 +59,11 @@ function renderFeatureResults() {
 
     const matches = feats.filter(f => {
         const matchesQuery =
-            f.n.toLowerCase().includes(query) ||
-            f.desc.toLowerCase().includes(query);
+            f.name.toLowerCase().includes(query) ||
+            f.description.toLowerCase().includes(query);
 
         const matchesCategory =
-            category === 'all' || f.t === category;
+            category === 'all' || f.type === category;
 
         return matchesQuery && matchesCategory;
     });
@@ -63,7 +81,7 @@ function renderFeatureResults() {
         const item = document.createElement('button');
         item.className = 'feature-result';
         item.type = 'button';
-        item.textContent = f.n + ' · ' + fmt(f.lat, f.lon);
+        item.textContent = f.name + ' · ' + fmt(f.lat, f.lon);
         item.addEventListener('click', () => pick(f));
         featureResults.appendChild(item);
     });
@@ -80,8 +98,9 @@ const info=$('#info');let cur=null;
 const home='<h2>Earth’s Moon</h2><div class="s">Mean radius 1,737 km · gravity 1.62 m/s² · mean distance 384,400 km</div><p>Tidally locked, so the same near side always faces Earth. Drag to rotate, scroll or pinch to zoom, and tap any label to fly to it. Zoom in to reveal more names. Move the sunlight slider so the terminator crosses a region to see its relief.</p>';
 info.innerHTML=home;
 let rx=.1,ry=0,vx=0,vy=0,dist=4.4,tD=4.4,fly=null;
+
 function pick(f){if(cur)cur.el.classList.remove('sel');cur=f;f.el.classList.add('sel');
-info.innerHTML='<h2>'+f.n+'</h2><div class="s"><i style="background:'+COL[f.t]+'"></i>'+SN[f.t]+' · '+fmt(f.lat,f.lon)+'</div><p>'+f.desc+'</p>';
+info.innerHTML='<h2>'+f.name+'</h2><div class="s"><i style="background:'+COL[f.type]+'"></i>'+SN[f.type]+' · '+fmt(f.lat,f.lon)+'</div><p>'+f.description+'</p>';
 fly={x:f.lat*D,y:-f.lon*D};tD=Math.min(tD,2.4)}
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const[a,o]=b.dataset.v.split(',').map(Number);fly={x:a*D,y:-o*D};tD=4.4;if(cur){cur.el.classList.remove('sel');cur=null;info.innerHTML=home}});
 const ptrs=new Map();let pd=0;const pinch=()=>{const a=[...ptrs.values()];return a.length<2?0:Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])};
@@ -103,7 +122,7 @@ moon.rotation.set(rx,ry,0);moon.updateMatrixWorld();
 const s=$('#sun').value*D;light.position.set(Math.sin(s)*6,1,Math.cos(s)*6);
 const cw=innerWidth,ch=innerHeight,lvl=dist>5.2?1:dist>3.4?2:3,on=$('#labOn').checked;
 for(const f of feats){v.copy(f.p);moon.localToWorld(v);w.copy(cam.position).sub(v).normalize();const fc=v.dot(w);
-const show=on&&vis[f.t]&&(f.pr<=lvl||f===cur),o=show?Math.max(0,Math.min(1,(fc-.05)*5)):0;
+const show=on&&vis[f.type]&&(f.priority<=lvl||f===cur),o=show?Math.max(0,Math.min(1,(fc-.05)*5)):0;
 if(o<.02){f.el.style.display='none';continue}
 v.project(cam);f.el.style.display='';f.el.style.opacity=o;f.el.style.transform='translate('+((v.x*.5+.5)*cw-6)+'px,'+((-v.y*.5+.5)*ch-7)+'px)'}
 const lat=rx/D,lon=wrap(-ry)/D;$('#hud').innerHTML='Centre '+fmt(lat,lon)+'<br>'+(Math.abs(lon)<90?'Near side (Earth-facing)':'Far side');
